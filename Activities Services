@@ -1,0 +1,21 @@
+1. Services have a name and display name, which could be different. What is the service name of the only Totally-Legit service?
+get-service | select name,displayname
+
+2. What command-line (cmd) command will show all services, running or not running?
+sc query state=all
+
+3. What PowerShell command will list all services?
+get-service
+
+4. What registry location holds all service data?
+HKLM\SYSTEM\CurrentControlSet\Services
+
+5. What registry subkey holds a service's .dll location?
+Parameters
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Service_Name\Parameters\ServiceDll
+
+6. Services have a name and display name, which could be different. What is the service name of the only Totally-Legit service?
+get-service | select name, displayname
+
+7. Figure out the SID of the only Totally-Legit service.
+sc.exe showsid Legit
