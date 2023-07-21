@@ -65,4 +65,97 @@ gci 'C:\$RECYCLE.BIN' -Recurse -Force
 
 ___________________________________________________________________________________
 
+			JUMPLIST
+
+engineered to allow users to “jump” or access items they have frequently or recently used quickly and easily
+	Windows 7 and 10 taskbar
+	recent files and tasks
+
+gci -Recurse C:\Users\*\AppData\Roaming\Microsoft\Windows\Recent -ErrorAction Continue | select FullName, LastAccessTime
+
+net use * http://live.sysinternals.com - access sysinternals tools
+get-childitem C:\Users\<username>\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations  | % {z:\strings.exe -accepteula $_} >> C:\recentdocs - put in text document
+
+get-childitem -recurse C:\Users\<username>\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations -erroraction continue | select fullname, lastaccesstime
+
+C:\Users\<username>\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations in GUI
+
+___________________________________________________________________________________________
+
+						RECENT FILES
+
+Registry Key that will track the last files and folders opened and is used to populate data in “Recent” menus of the Start menu.
+	-last 150 folders and filed opened
+
+List Files in Recent Docs:
+gci 'REGISTRY::HKEY_USERS\*\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs'
+
+Convert File Hex to Unicode:
+[System.Text.Encoding]::Unicode.GetString((gp "REGISTRY::HKEY_USERS\*\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs\.txt")."0")
+
+Convert all of a users values from HEX to Unicode:
+Get-Item "REGISTRY::HKEY_USERS\*\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs\.txt" | select -Expand property 
+| ForEach-Object { [System.Text.Encoding]::Default.GetString((Get-ItemProperty -Path "REGISTRY::HKEY_USERS\*\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs\.txt" -Name $_).$_)}
+
+_______________________________________________________________________________________________________
+
+					BROWSER ARTIFACT
+
+History will record the access to the file on the website that was accessed via a link
+stores details for each user account
+
+different location for every browser
+
+for Chrome:
+Users\<user>\appdata\local\google\chrome\userdata\default
+
+through sysinternals:
+.\strings.exe 'C:\Users\<username>\AppData\Local\Google\Chrome\User Data\Default\History' -accepteula
+
+Find FQDNs in Sqlite Text Files:
+$History = (Get-Content 'C:\users\<username>\AppData\Local\Google\Chrome\User Data\Default\History') -replace "[^a-zA-Z0-9\.\:\/]",""
+$History| Select-String -Pattern "(https|http):\/\/[a-zA-Z_0-9]+\.\w+[\.]?\w+" -AllMatches|foreach {$_.Matches.Groups[0].Value}| ft
+
+_______________________________________________________________________________________________________________
+
+					WINDOWS EVENT LOGS
+
+view/analyze event logs - GUI
+	eventvwr
+	Located in C:\Windows\System32\Winevt folder but configurable
+
+Command Line:
+wevtutil el  - show all logs
+wevtutil gli security  - get log info
+    wevtutil qe security /c:3 /f:text - get last 3 events
+
+Powershell:
+    Get-EventLog -LogName System -Newest 10 | ft -wrap - view 10 newest system logs
+    Get-Eventlog -LogName Security | ft -wrap - view entire message field in security log
+    get-winevent -FilterHashtable @{logname="security";id="4624"} | select -first 5 | ft -wrap - search logs w/ multiple criteria
+
+Event IDs to search for malicious activity:
+	User Added to Privileged Group: 4728, 4732, 4756
+	Security-Enabled group Modification: 4735
+	Successful/ Failed User Account Login: 4624, 4625
+
+__________________________________________________________________________________________________
+
+				POWERSHELL TRANSCRIPT
+
+Start-Transcript - Allows the capture of the input and output of Windows PowerShell commands into text-based transcripts
+
+Get-History - View Powershell console History
+
+Get-Content "C:\users\$env:username\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt" - View entire powershell History
+
+___________________________________________________________________________________________________
+
+				SCRIPT BLOCK LOGGING
+
+Logs detailed processing of commands, script blocks, functions, and scripts to the Microsoft-Windows-PowerShell/Operational event log
+
+Logging is enabled through the Turn on PowerShell Script Block Logging Group Policy setting in Administrative Templates → Windows Components → Windows PowerShell
+
+reg.exe add HKLM\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging\ /v EnableScriptBlockLogging /t REG_DWORD /d 1 /f - Turn on script black logging via the Registry
 
