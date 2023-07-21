@@ -1,0 +1,108 @@
+HEX
+
+1. What are the maximum and minimum value a single Hexadecimal digit can contain?
+0x0 - 0xF
+
+2. What are the maximum and minimum values, in decimal notation, that a single Hexadecimal digit can represent?
+0-15
+
+3. Solve the following equation:
+
+0x31A + 0x43
+
+0x35D
+
+4. Solve the following equation:
+
+0x31A - 0x21B
+
+used calculator - 0xFF
+
+BITS AND BYTES
+
+1. How many bits are in a nibble, and a byte?
+4, 8
+
+2. How many bits does a single Hexadecimal character represent?
+4
+
+3. How many bytes could the range 0x00000000 - 0x00000010 contain?
+17
+
+4. What are the values contained in hex positions 0x00000001 through 0x00000008?
+look at hex dump and starting at 2nd value for 1st position
+
+MBR
+
+1. How large is the Master Boot Record and what directory is it located in?
+512, /dev
+
+2. Locate the master boot record for one of the Linux machines and read it with xxd
+What programming language is the MBR written in?
+sudo xxd -l 512 -g 1 /dev/vda
+assembly
+
+3. The file /home/bombadil/mbroken is a copy of an MBR from another machine. Hash only the Bootstrap section of the MBR using md5sum. The flag is the entire hash.
+dd if=mbroken bs=1 skip=446 count=16
+
+4. The file /home/bombadil/mbroken is a copy of an MBR from another machine.
+Hash the first partition of the file using md5sum. The flag is the hash.
+
+dd if=mbroken bs=446 count=1
+
+
+5. The file /home/bombadil/mbroken is a copy of an MBR from another machine.
+You will find the "word" GRUB in the output, hash using md5sum.
+
+generated hash of word GRUB
+
+SYSV
+
+1. 
+Identify which of your Linux machines is using SysV Initialization.
+Minas_Tirith
+
+2. Identify the default run level on the SysV Init Linux machine.
+systemctl get-default
+
+3. What is the last script to run when the command init 6 is executed?
+ls -l /etc/rc6.d
+/etc/init.d/reboot
+
+4. What run levels start the daemon that allows remote connections over port 22?
+ls-l /etc/rc6.d
+2,3,4,5
+
+SYSTEMD
+
+1. Identify the file symbolically-linked to init on the SystemD init machine.
+ls -l /sbin/init
+/lib/systemd/systemd
+
+2. What is the default target on the SystemD machine and where is it actually located?
+ls -lisa /lib/systemd/system/default.target
+graphical.target, /lib/systemd/system/graphical.target
+
+3. What unit does the graphical.target want to start, based solely on its configuration file?
+cat /lib/systemd/system/default.target
+wants=display-manager.service
+
+4. What dependency to graphical.target will stop it from executing if it fails to start, based solely on its static configuration file?
+same as 3
+requires=multi-user.target
+
+5. How many wants dependencies does SystemD actually recognize for the default.target
+ls -l /etc/systemd/system
+saw default.target.wants
+cd to that directory
+cat file inside
+# of options under [unit]
+
+6. What is the full path to the binary used for standard message logging?
+/usr/sbin/rsyslogd
+
+GRUB 
+
+1. Identify the Linux Kernel being loaded by the Grub, by examining its configuration.
+linux is command
+find file path w/ cat /proc/cmdline
