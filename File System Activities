@@ -1,0 +1,28 @@
+3. What PowerShell command will list all files in the current directory, regardless of their attributes?
+get-childitem - force
+
+4. What PowerShell command will give you the sha512 hash of a file?
+get-filehash -algorithm
+
+5. What PowerShell command will list permissions of a file?
+get-acl
+
+6. What Windows file maps hostnames to IP addresses?
+hosts
+
+7. Which group has ReadandExecute (RX) permissions to the file listed in the previous challenge, File_System_Basics_6?
+Get-Acl -Path hosts).Access
+
+8. Find the last five characters of the MD5 hash of the hosts file.
+get-filehash hosts -algorithm md5
+
+9.
+
+10. There is a hidden directory in the CTF user's home directory. The directory contains a file. Read the file.
+dir /a:h
+
+12. Find the Alternate Data Stream in the CTF user's home, and read it.
+dir /r on Windows ; get-content <filename> -stream <stream>
+
+14. There are plenty of phish in the C:\Users\CTF, but sometimes they're hidden in plain site. 
+looking for hidden directories and files, note file size to find not empty file
