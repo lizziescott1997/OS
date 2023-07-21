@@ -1,0 +1,90 @@
+976-10 (single attempt)
+
+            BASICS
+
+pwd - present working directory; where you are in the file system
+
+relative path  - cd ../
+absolute path- fully typed out
+
+cd ~ - go to home directory
+cd / - go to root of file system
+
+hostname - see machine you are on
+uname -a - same as hostname but w/ more info
+
+who - see everyone logged in
+
+ifconfig/ip addr- get ip address
+
+arp - see MAC addresses
+
+iproute - get ip routes
+
+netstat -a - see connections to machine
+
+iptables -L - firewall rules
+
+sudo -l - see what you can do w/ sudo
+
+Redirection
+echo $directories > this is a new file - puts output of this command into a file
+
+ls -l | wc - pipes one command into the other
+
+id - get uid, gid, groups for user
+  -can enumerate other users id <user>
+
+_____________________________________________________________________
+
+      FILE SYSTEM HIERARCHY
+
+-everything begins at root
+
+/bin - binaries; commands
+
+/home - home directory
+
+/proc - processes
+
+    -cd into process and do sudo ls -l to see its interactions and symbolic links
+
+/etc - everything configurable on host
+  /etc/passwd - user info; username:password:userid:groupid:idinfo:homedirectory:loginshell  #find specific pieces w/awk
+  /etc/shadow - passwords
+  /etc/groups - who's part of which groups
+    cat /etc/group | grep <username> - see what groups specific user belongs to
+
+/sbin - another binaries location
+
+/temp - temporary files, anyone can run
+
+/var - variables, log files
+
+____________________________________________________________
+
+    		PERMISSIONS
+
+chmod - set permissions
+	user,group,other
+	see permissions w/ ls -lisa
+	+x - make executable
+
+750 - rwxr-x---
+
+Sticky bit:
+removes the ability to delete files unless the user attempting is the owner of the file
+
+Special Permissions:
+if s in user field, running as that user; in group field executed as group; in other is where it restricts deletion
+rwsr-xr-x ping - sticky bit on execute, runs command as root regardless of logged in user
+
+_________________________________________________________________________-
+
+			AWK/SED
+
+cat /etc/passwd | awk -F: '{print $1}'
+only returns username field, delimited on :
+
+cat /etc/passwd | grep root | sed s/root/bacon/g
+replace all instances of root w/ bacon
