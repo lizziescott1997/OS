@@ -1,0 +1,122 @@
+Big Mike Got Killed In Russia
+
+BIOS
+
+_____________________________________________________________________________________________
+
+MBR/GPT - Master Boot Record 
+  contains GRUB, partition table and MBR validity check **512 bytes**, max 4 primary partitions up to 2TB
+  located /dev/hda or /dev/sda
+  
+  Commands:
+    du - disk usage; summarize disk usage of set of FILEs
+    df - disk free - amount disk space avaialible on file system
+    lsblk- lists info about all available drives
+  
+  446 bytes boot loader, 64 bytes partition table(16 byte partitions) starts at 447, 2 byte magic number
+
+MBR = BIOS, GPT = UEFI
+
+______________________________________________________________________________________________________-
+
+            GRUB 
+
+Grand Unified Bootloader   
+located in MBR
+alter boot entries, select different kernels, and modifying initial RAM disk(initrd)  
+config file /boot/grub/menu.lst
+OS Selection screen
+
+____________________________________________________________________________
+
+          KERNEL 
+  
+initializes device and drivers, mounts root file system
+uncompresses into RAM
+establishes memory management, detects CPU type, page tables
+mounts root (/) file system
+**process 0**
+executes /sbin/init ( or systemd daemon) - first process started by kernel (PID 1)
+  
+Commands:
+  ls -l /sbin/init - determine which init system you are using
+
+________________________________________________________________________
+
+                INIT/SYSTEMD
+
+sets rest of system in motion via runlevels
+  INIT
+    -looks at /etc/inittab
+      unique identifuer, run levels, action
+    -run levels 0-6 - identifies default level from inittab and uses to load programs
+    -handles by scripts (/etc/init.d) and scripts that run (S)Start and (K)Kill scripts from rc folders
+
+    Commands
+      service <service name> start | stop | restart | status | reload
+      ***service --status-all - state of all sysv targets, + is running and - is stopped
+
+  SYSTEMD
+    -everything loaded in parallel
+    -faster and more secure
+    -instead of run levels uses targets - point to other dependencies
+      default.target essentially default 
+    
+  Commands
+    systemctl set-default - change default target
+    systemctl list-dependencies - all services running under default.target
+    systemctl status <application>.service
+    from /lib/systemd/system - ls -l | grep - v wants | grep run
+
+  config in /etc/systemd and and /etc/systemd/system
+
+___________________________________________________________________________________________
+
+        RUNLEVELS/TARGETS
+
+ Run levels 
+    0 - halt
+    1 -single user mode
+    2- multi user mode no networking
+    3 - multi user w /networking
+    4- not used /user definable
+    5 - multi user w/ networking and GUI
+    6- reboot
+    **ls -l /etc/rc<1-6>.d - see different services run at each run level (anything other than init.d probably malicious)
+      ls -l /etc/rc3.d - all services at level 3
+
+  Targets
+    0 - poweroff.target
+    1 - rescue.target
+    2 - multi-user.target
+    3 - multi-user.target
+    4 - multi-user.target
+    5 - graphical.target
+    6 - reboot.target
+
+________________________________________
+
+        POST BOOT PROCESS
+
+/etc/environment - sets environmental variables such as PATH
+/etc/profile - exexutes script every time user logs in with interactive shell
+  cat /etc/profile
+
+.bash_profile - runs if user has a bash profile
+.bashrc - executes when interactive nonlogin shell invoked (not prompted for credentials)
+
+________________________________________________________________________
+
+        PARTITIONS
+
+logical segmentation of single sgtorage device into multiple usable sections
+
+two main types - MBR  and GPT (newer)
+
+_______________________
+
+xxd - command to get hex dump
+sudo xxd -l 512 -g 1 /dev/vda - hex dump of MBR on vda
+
+dd - used for backups, bit for bit copy of drive
+sudo dd if=/dev/dday of MBRcopy bs=512 count=1
