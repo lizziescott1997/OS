@@ -1,0 +1,100 @@
+Points: Day 1: 324 Day 2: 322 Day 3: 330
+
+https://www.reddit.com/r/skyrim/comments/14wxy7e/whats_something_that_you_did_every_play_through/ - look into dragonstone, stormcloaks
+
+xfreerdp /u:student /v:x.x.x.x -dynamic-resolution +glyph-cache +clipboard
+https://os.cybbh.io/public/os/latest/index.html
+
+**note when persistence is mentioned**
+
+3 10.50.33.87 - admin station/stack #
+xfreerdp /u:andy.dwyer /v:10.50.33.87 -dynamic-resolution +glyph-cache +clipboard
+when using ssh from there use 3 in place of Xs
+http://10.50.24.129:8000/ -CTFd ELSC-M-505
+
+Linux Login: ssh -J andy.dwyer@10.50.33.87 user@ip
+_______________________________________________________________________-
+
+            POWERSHELL BASICS
+
+get-verb - get all verbs used in PS commands
+
+get-command - get all PS commands
+get-command -type cmdlet | sort-object -property noun | format-table -groupby noun
+  -only return cmdlets, sorted by nouns, grouped into noun used
+
+get-process - get all process running
+get-process | more - same but better readable format
+
+command-name| get-member - get properties and methods for command
+command-name | get-member | where-object {$_.membertype -match "Method"} - only displaying membertypes that are methods
+command-name | get-member | where-object {$_.membertype -eq "Property"} - only displaying membertypes that are "Property", -eq more specific
+
+start-process notepad.exe - starts process
+stop-process -name notepad - kills process
+
+start-process calc
+(get-process calculator*).kill() - way of killing process via /method
+
+command-name | select-object name,id,path- returns output of command w/ only the fields included returned
+get-process | select-object name,id,path | where-object {$_.id -lt '1000} - showing same info but for processes w/ pid < 1000
+(get-process | select-object name,id,path | where-object {$_.id -lt '1000} - showing same info but for processes w/ pid < 1000)
+    -returns number of processes that have PID < 1000
+
+CIM: classes- rifle vs pistol instances-9mm is instance of pistol
+get-cimclass * - shows every CIM class
+get-ciminstance -classname win32_logicaldisk
+get-ciminstance -classname win32_logicaldisk -filter "drivetype=3"
+
+get-executionpolicy - see restriction policy for local machine
+get-executionpolicy list - see at each scope
+set-executionpolicy -executionpolicy unrestricted -scope CurrentUser
+  -change execution policy of current user
+
+______________________________________________________________________________
+
+                        POWERSHELL PROFILES
+
+**persistence**
+
+Description             Path
+All Users, All Hosts        $PsHome\Profile.ps1
+All Users, Current Host     $PsHome\Microsoft.PowerShell_profile.ps1        ****these 4 read from top down for order of precedence
+Current User, All Hosts     $Home\[My]Documents\Profile.ps1
+Current User, Current Host  $Home\[My ]Documents\WindowsPowerShell\Profile.ps1
+
+$profile - show path of current user, current host - shows user defined variables, login scripts
+-every time powershell is opened checks 4 locations, runs anything in profile ps1
+
+test-path -path $profile.allusersallhosts - shows True if profile exists as long as ps1 file exists even if empty
+
+new-item -itemtype file -path $profile -force - create new profile, by default goes to current user current host
+new-item -itemtype file -path $profile.allusersallhosts -force - specify profile location
+
+ISE $PROFILE - opens up this profile's ps1 in ISE
+            -from that ps1 can do something like new-alias -name ips -value get-nettcpconnection
+            -after relaunching PS that alias will work
+
+___________________________________________________________________________________________
+
+                        WINDOWS/POWERSHELL REMOTING
+
+get-item WSMan:\localhost\Client\TrustedHosts - distant hosts that are safe to remote to
+set-item WSman:\localhost\Client\TrustedHosts -value "file-server, domain-control, workstation2" -concatenate - append trusted host to list
+
+$session=new-pssession -computername workstation2 -credential andy.dwyer - create new shell session on one of trusted hosts
+invoke-command -computername file-server {get-service} - tell distant computer to do the command (not remoting in)
+
+invoke-command -computername file-server, domain-control {get-process} -asjob - runs job remotely in the background, opening shell back up for use
+recieve-job # - with this example, see output from get-process command for this job
+__________________________________________________________________________________________
+
+                                    .NET API
+
+Download file in PS:
+$url = "http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_win64_standalone.zip"
+$output = "$PSScriptRoot\volatility_2.6_win64_standalone.zip"
+$start_time = Get-Date
+$wc = New-Object System.Net.WebClient    **create new webclient object
+$wc.DownloadFile($url, $output)       **Use the Downloadfile method to download a file
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
