@@ -1,0 +1,29 @@
+        ADS BASICS
+
+store metadata - file attributes, icons, image thumbnails
+-hide data using NTFS
+  files consists of attributes, security settings, mainstreams and alternate streams
+  By default, only the mainstream is visible
+  way to hide data
+
+deleted once copied to fat32
+can't be disabled
+
+syntax:
+[filename.extension]:[alternate data stream]:$DATA
+
+___________________________________________________________________________
+
+        CREATING ADS
+
+file created (file.txt)
+echo "sdklfj" > .\file.txt
+get-item .\file.txt -stream *    ### File w/o ADS, Stream: $DATA indicates no ADS
+set-content .\file.txt -value "social security numbers" -stream secret.info
+get-item .\file.txt -stream *    ### Second entry where stream is secret.infi
+get-content .\file.txt -stream secret.info   ### See content of ADS
+
+get-filehash .\file2.txt - see hash for this file
+set-content .\file2.txt -value "social security numbers" -stream secret.info
+get-item .\file.txt -stream *
+get-filehash .\file2.txt - see hash for file, doesn't change w/ ADS
