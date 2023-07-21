@@ -1,0 +1,168 @@
+            REGISTRY BASICS
+
+tools to view/manipulate registry
+  regedit.exe 
+    GUI
+    located at C:\Windows\regedit.exe
+  reg.exe
+    CLI
+    reg add, reg query, reg delete
+
+mount remote registry w/regedit:
+  open regedit GUI
+  click file -> connect network registry
+  type system name (ex. file-server)
+  click check names
+  click ok
+
+Registry Keys for Persistence:
+  HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+  HKU\<SID>\Software\Microsoft\Windows\CurrentVersion\Run
+  HKLM\SYSTEM\CurrentControlSet\services
+  HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders
+  HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
+  HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon
+
+-key value pairs
+  HKLM- hive
+  folders- subkeys
+  w/in folders -keys (Names) and data (hex value)
+
+sethc.exe - executes sticky keys
+
+______________________________________________________________________________________________
+
+        HKLM
+
+-hardware, software, SAM, security, system
+-every single key read upon booting
+-changes take effect on reboot
+
+-any changes made in HKLM\SECURITY,SAM,SOFTWARE,SYSTEM stored on .LOG
+_______________________________________________________________________-
+
+    HKU - HIVE KEY USERS
+
+SID 18, 19, 20 - system accounts
+18 - local system
+19- local service
+20 -network service
+
+other SIDs represent individual users
+
+user enviornment settings on desktop and file associations
+  -shortcuts, things that open when booting up
+
+NTUSER.DAT
+___________________________________________________________________
+
+    HKCU - HIVE KEY CURRENT USER
+
+symbolic link loaded into RAM every time user logs in
+exact copy of logged in user
+
+-only w/ current user
+
+HKEY_USERS (HIVE)
+              └──SID (S-1-5-21-3939661428-3032410992-3449649886-XXXX) (Key)
+
+______________________________________________________________
+
+    HKCC - HIVE KEY CURRENT CONFIG
+
+symbolic link to nonvolatile SIDs similar to HKCU
+
+HKEY_Local_Machine (HIVE)
+              └──SYSTEM (Key)
+                      └──CurrentControlSet (Subkey)
+                                    └── Hardware Profiles (Subkey)
+                                                └── Current (Subkey)
+
+_______________________________________________________________
+
+    HKCR - HIVE KEY CLASSES ROOT
+
+symbolic link to HKLM -> software -> classes
+
+HKEY_Local_Machine (HIVE)
+              └──Software (Key)
+                      └──Classes (Subkey)
+
+HKEY_Local_Machine (HIVE)
+              └──Software (Key)
+                      └──Classes (Subkey)
+
+_____________________________________________________________________________________
+
+      REGISTRY MANIPULATION
+
+REG_SZ - string
+
+from system 32
+
+type reg.exe which allows to run commands against it
+
+reg.exe /? - help commands
+
+reg query - read keys from specific registry locations
+  ex. reg query hklm\software\microsoft\windows\currentversion\run
+  -returns what is stored in key
+
+reg add - add key to registry location
+  ex. reg add hklm\software\microsoft\windows\currentversion\run /v test /t REG_SZ /d C:\windows\system32\windowspowershell\v1.o\powershell.exe
+    -/v - value
+    -/t - data type 
+    -/d - data - command to run
+  -if run reg query, this info should now show up 
+
+reg delete- delete keys
+  ex. reg delete hklm\software\microsoft\windows\currentversion\run /v test
+    -also verified w/ reg query
+
+when finished type powershell to return to regular PS
+
+Powershell:
+Query:
+get-childitem - shows key and contents (subkeys)
+  ex. get-childitem hklm\software\microsoft\windows\currentversion\run
+get-itemproperty
+get-item- returns basic info about key similar to reg query
+
+Modify:
+set-itemproperty
+remove-itemproperty
+  ex. remove-itemproperty hklm\software\microsoft\windows\currentversion\run -name Test
+rename-itemproperty
+  ex. hklm\software\microsoft\windows\currentversion\run -name securityhealth -newname healthsecurity
+
+Create:
+new-item - create empty key
+  ex. new item "hklm\software\microsoft\Office\14.0\Security\Trusted Documents\Trusted Records" -force
+new-item new-itemproperty - add values to key
+  New-ItemProperty "HKLM:\Software\Microsoft\Office\14.0\Security\Trusted Documents\TrustedRecords" -Name "%USERPROFILE%Downloads/test-document.doc" -PropertyType Binary -Value ([byte[]](0x30,0x31,0xFF)) 
+
+________________________________________________________________________________________
+
+          POWERSHELL PSDRIVES
+
+permanent or temporary data storage location only accessible in PS
+browse through registry like file system
+access remote registries- only see HKLM/HKU
+provider is what type of data type is being used
+can cd into PSDrive eg. cd Demo:, go back to PS w/ exit command and then powershell
+
+get-psdrive - see already created PS Drives
+  ex. C w/ root C:\, HKCU w/ root as HKEY_CURRENT_USER, HKLM w/ root HKEY_LOCAL_MACHINE
+
+new-psdrive- create new PSDrive
+  ex. New-PSDrive -Name Demo -PSProvider FileSystem -Root c:\Demo
+  -establish persistence by storing in PS Profile
+
+create Registry PSDrive:
+New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS
+
+make shortcuts to locations in file system/Registry:
+New-PSDrive -Name Desktop -PSProvider FileSystem -Root C:\users\student\Desktop
+New-PSDrive -Name HKLM-Run -PSProvider Registry -Root HKEY_Local_Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+
+_______________________________________________________________________________________________
