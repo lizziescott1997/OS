@@ -1,0 +1,20 @@
+1. What Sysinternals tool will allow you to view a file's manifest?
+SigCheck
+
+2. What is the RequestedExecutionLevel for an application to run with the same permissions as the process that started it?
+asInvoker
+
+3. What RequestedExecutionLevel will prompt the user for Administrator credentials if they're not a member of the Administrator's group?
+requireAdministrator
+
+4. The flag is the RequestedExecutionLevel of the schtasks.exe file.
+asInvoker
+
+5. What registry key holds UAC values?
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+
+6. Determine which UAC subkey property shows whether UAC is enabled or not. The flag is the data value in that property.
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System while in Windows not PS
+
+7. HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+ConsentPromptBehaviorAdmin
