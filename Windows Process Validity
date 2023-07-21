@@ -1,0 +1,49 @@
+process validity- making sure things are what they say they are
+
+DLL- dynamically linked list, used to run executables
+Service- started up on boot or when user logs in, runs in background completing a task
+
+Possible abnormal things in process list?
+  mispelled processes to obfuscate
+  known system processes w/ extremely high PID
+  DLLs/modules from weird/specific location
+  patterns in ephemeral ports
+
+get-process smss,csrss,lsass | sort -property id - see just these three processes; discover normal, abnormal, and hidden processes and services
+
+get-process chrome | foreach {$a} {$_.modules} - see DLLs (modules) for Chrome
+  DLLs in user's downloads folder likely malicious
+
+get-process | select name,id,description | sort -property id - see processes w/ only name,id,descrption sorted by PID
+  -look for missing descriptions
+
+Get-Process | Select Name, Id, Path | sort -property id
+  -look for abnormal locations in path for normal processes
+
+Get-Ciminstance Win32_service | Select Name, Processid, Pathname - see services and their path
+
+get-nettcpconnection
+get-nettcpconnection -state established - see all established network connections
+**ephemeral ports 1024-65535 - used for duration of communication session, pseudorandom
+  -look for ports like 3333, 4444(metasploit), other odd patterns
+
+get-scheduledtask | select * | select -first 3 - see info on first 3 scheduled tasks
+
+_____________________________________________________________________________________________
+
+CMD COMMANDS
+
+tasklist /v | more - windows cmd way to see processes
+  -supposed to be run under user NT Authority so look for regular username(abnormal)
+tasklist /svc - see services hosted under each process
+tasklist /m | more - see processes and their DLLS
+    tasklist /m /fi "imagename eq chrome.exe" | more - see DLLs for chrome specifically
+      /fi - filter
+
+sc query - view services in cmd
+sc queryex type=service | more - get more detailed list
+sc queryex type=service state=inactive - only see inactive services
+
+schtasks /query | more - see scheduled tasks in cmd
+
+netstat -anob - get network connections
