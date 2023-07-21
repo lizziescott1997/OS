@@ -1,0 +1,125 @@
+1. BASICS
+
+1. What command lists the contents of directories in Linux/Unix systems?
+ls
+
+2. For the ls command, what arguments, or switch options, will allow you to print human-readable file sizes in a long-list format?
+ls -lh
+
+3. What character will pipe the standard output from
+
+echo "I’m a plumber"
+
+to another command, as standard input?
+
+|
+
+4. What argument/switch option, when used with man, will search the short descriptions and man-page-names for a keyword that you provide?
+man -k
+
+5. Search the man pages for the keyword digest. Then, use one of the binaries listed to hash the string OneWayBestWay using the largest sha hash available.
+man -k digest
+echo -n "OneWayBestWay" | sha512sum
+
+6. This file contains encrypted contents. Identify its file type, then decode its contents.
+file Encrypted - is a zip
+unzip Encrypted
+cat symmetric - has key
+openssl enc -d -aes-128-cbc -salt -in cipher -out newfile.txt
+cat newfile.txt
+
+HIERARCHY
+
+1. What is the absolute path to the root directory?
+/
+
+2. What is the absolute path to the default location for configuration files?
+/etc
+
+3. What is the directory that contains executable programs (binaries) which are needed in single user mode, to bring the system up or to repair it?
+/bin
+
+4. What is the absolute path to the directory which contains non-essential binaries that are accessible by standard users as well as root?
+/usr/bin
+
+5. An absolute path to a directory which contains binaries only accessible by the root user, or users in the root group.
+/sbin
+
+6. What is the absolute path for the binary cat man-page?
+whereis cat
+/usr/share/man/man1/cat.1.gz
+
+7. Search the user home directories to find the file with the second-most lines in it. Hint: Exclude the VDI file! The flag is the number of lines in the file.
+wc -l <filename>
+
+USERS AND GROUPS
+
+1. Read the file that contains the user database for the machine. Identify a strange comment.
+cat /etc/passwd
+
+2. Identify all members of the lodge group. List their names in alphabetical order with a comma in between each name.
+cat /etc/group | grep "lodge"
+
+3. Find the user with a unique login shell.
+sort /etc/passwd | uniq -c
+
+5. 
+
+PERMISSIONS
+
+1. Find the directory named Bibliotheca. Enter the absolute path to the directory.
+cd through filesystem to find
+
+2. Identify the number of users with valid login shells, who can list the contents of the Bibliotheca directory.
+ls to see permissions
+for valid login shells grep -Ff /etc/shells /etc/passwd
+
+3. The permissions that user sejanus has on /media/Bibliotheca, in octal format.
+id sejanus - see what groups he is in
+ls -l of Bibliotheca - see group for the file
+Same group = same permissions
+
+4. Locate the file within /media/Bibliotheca that is modifiable by the only user that is part of the Chapter group, but not part of the Lodge group.
+cat /etc/group | grep "chapter
+cat /etc/group | grep "lodge"
+-find user who doesn't match
+ls through files to find one where he has w
+
+6.
+/media/Bibliotheca/Bibliotheca_unus/Codex_Hereticus
+
+8. Execute the file owned by the guardsmen group in /media/Bibliotheca, as the owning user.
+find file and cat
+
+9. Read the concealed file within /media/Bibliotheca
+ls -l -d .?* for only hidden files or ls -la to show everything plus hidden
+
+10. Find the warp and read its secrets for the flag.
+find -type f -name ".*" | grep secret
+
+REFORMAT
+
+1. Use awk to print lines:
+
+>= 420 AND <=1337
+
+The flag is a SHA512 hash of the output.
+awk 'NR>=420&&NR<=1337' numbers | sha512sum
+
+2.
+awk -F' ' -v OFS="," '{print $1, $2, $3, $4, $5, $6}' connections > file.csv
+for first line add space after separator and add comma to the end
+
+LOGIC
+
+1. Minefield map
+chmod +x the script
+cat files and enter all commands as one string
+
+2. cat Inquistion Targets
+8
+
+REGEX
+Universally adminstered Unicast MAC addresses
+grep -E '^([0-9A-Fa-f][0,2,4,6,8,A,C,E])(-[0-9A-Fa-f]{2}){5}$' numbers | wc -l
+178
