@@ -1,0 +1,163 @@
+2 primary processes after startup
+  for kernel space [kthreadd] PID = 2
+  for user space /sbin/init PID = 1
+all kernel processes fork()ed from [kthreadd] and all user processes from /sbin/init or direct ancestor
+
+kernel proceesses- manage hardware, directly handled by kernel, own memory space, high priority
+  -identified name in [] (using -f with ps)
+  -kkthread spawned processes PPID of 2
+  -unrestricted access to processor
+kernel space - area only kernel can access
+
+user processes run in separate memory space
+  small subset of memory and safe CPU operations
+
+kernel starts /sbin/init - parent/grandparent of all user processes
+
+_______________________________________________________________________________________
+
+PROCESS LISTING
+
+ps - see processes
+  -elf
+
+UID  PID  PPID C PRIORITY NI(Nice number)
+
+top - show linux processes in real time
+
+htop - similar to top but color coded
+  edit w/ f2
+
+_______________________________________________________________________________________
+
+PROCESS OWNERSHIP
+
+EUID - effective user ID
+  defines access rights for a process
+RUID - real user ID
+  indicates who initated a process
+  defines user who can interact w/ running process most significantly, which user can kill and send signals to process
+
+user - entity that can run processes and own files
+
+____________________________________________________________________________________
+
+SYSTEM CALLS
+
+fork () - kernel creates nearly identical copy of process
+exec() - kernel starts propgram replacing current processes
+
+Signals - software interrupts sent to a program to indicate that an important event has occurred
+  -kill -9 is SIGKILL
+
+__________________________________________________________________________
+
+ORPHAN AND ZOMBIE PROCESSES
+
+orphan - parent process exited, adopted by /sbin/init, PPID of 1
+  all daemons
+  disown -a && exit - close shell and for all children to be adopted
+
+zombie (defunct) - completed process still has entry in process table
+  waiting on parent to acknowledge or terminate
+  can't be terminated w/kill unless parent process killed
+  don't use resouces but take up entry of process table
+
+fork bomb - DOS attack where process continually replicates to depletete available system resources
+  -remedy w/ ulimit -u 30 which sets max processes user can run to 30
+
+__________________________________________________________________________-
+
+DAEMONS
+
+program that runs as background process
+
+all daemons are orphans but not all orphans are daemons
+
+purpose is to manage /monitor a service
+
+**persistence - Daemons are service that should run for duration of system operation, since init is parent, would require shutdown for parent to die**
+
+ps --ppid 1 -lf - malicious process orphaned and named to look like daemon
+
+systemctl - manage services in Linux
+  start, stop, reload, restart
+sudo systemctl restart <service name>
+systemctl status <service name>
+
+systemctl list-units - see status and names of different services
+
+____________________________________________________________________________________
+
+JOB CONTROL
+
+jobs - Display List of Jobs running in the background
+
+fg or bg - Push / Pull jobs to / from the foreground / background
+
+kill %<job #> - Terminate the process by job number
+
+[ctrl -z] or kill -19 - stop / suspend the job
+
+kill -9 <PID> or pkill -9 <process name> - kill a process by PID or name
+
+Stop Process = SIGSTOP(19) (pause signal, let’s you continue later, does not kill process)
+End Process = SIGTERM(15) (termination signal, the right way, the application can intercept this signal and initiate shutdown tasks such as temp file cleanup)
+Kill Process = SIGKILL(9) (kill signal, extreme, only use if SIGTERM doesn’t work, won’t initiate shutdown tasks)
+
+ping 8.8.8.8 &
+  (& means run in background)
+  [1] is process id, job #
+fg 
+control c and now see job has stopped
+jobs - see job 1 has stopped but still present
+kill -9 %1 - get this job out of table/memory
+running jobs again says killed and then no longer present
+
+________________________________________________________________________________________________________________________________________
+
+CRON JOBS
+
+cron daemon checks /var/spool/cron, /etc/cron.d, and file /etc/crontab once a min and executes any commands that match current time
+
+Two types of cron jobs:
+  System
+    run as root, rigidly scheduled
+    system wide maintenance tasks
+    controlled by /etc/crontab
+  User
+    use crontab command to create
+    stored in /var/spool/cron/crontabs
+
+crontab -u <username> file - sets users crontab file to the contents of listed file
+crontab -l -u <username> - Displays user’s crontab contents
+crontab -r -u <username> - Removes user’s crontab contents
+crontab -e -u <username> - edits user’s crontab contents
+
+Cron job syntax:
+* * * * * /directory/and/command
+| | | | |
+| | | | +---- Day of the Week   (range: 0-7, 1 = Monday)
+| | | +------ Month of the Year (range: 1-12)
+| | +-------- Day of the Month  (range: 1-31)
+| +---------- Hour              (range: 0-23)
++------------ Minute            (range: 0-59)
+
+__________________________________________________________________________________________________________________________
+
+PROCESSES AND PROC DIR
+
+sudo lsof | more - listing all open files process is using
+  FD - file descriptor
+    # - The number in front of flag(s) is the file descriptor number used by the process associated with the file
+    u - File open with Read and Write permission
+    r - File open with Read permission
+    w - File open with Write permission
+    W - File open with Write permission and with Write Lock on entire file
+    mem - Memory mapped file, usually for share library
+
+ls -l /proc/ - list all proc directories
+
+for specific process
+ps -elf | grep <name> - get the PID
+sudo ls -l /proc/<PID> - look at contents of directory for that PID
