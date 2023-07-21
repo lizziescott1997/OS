@@ -3,11 +3,20 @@ BROWSER ARTIFACTS
 1. What Sysinternals tool will allow you to read the SQLite3 database containing the web history of chrome?
 Strings
 
+2. Find the questionable website that a user browsed to (using Chrome), that appears to be malicious. *Note: There are more than one users on the box.
+gci -force "C:\Users\student\appdata\local\google\chrome\user data\default\history"
+get-content -force "C:\Users\student\appdata\local\google\chrome\user data\default\history"
+
 RECENT FILES
 
 1. What is the registry location of recent docs for the current user?
 HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs
 
+2. There is a file that was recently opened that may contain PII.
+gci 'REGISTRY::HKEY_USERS\*\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs'
+saw recent docs attached to users
+wmic useraccount get name,sid - got users associated w/ SIDs displayed
+looked through file system of users to find file
 
 BAM
 
@@ -25,6 +34,12 @@ PREFETCH
 1.What is the literal path of the prefetch directory?
 C:\Windows\Prefetch
 
+2.Enter the name of the questionable file in the prefetch folder.
+dir of C:\Windows\prefetch
+
+3. What is the creation time of the questionable file in the prefetch folder?
+gci -path C:\Windows\prefetch\BAD_INTENTIONS.EXE-8F2806FC.pf | select name,creationtime
+
 RECYCLE BIN
 
 1. In the Recycle Bin, there is a file that contains the actual contents of the recycled file. What are the first two characters of this filename?
@@ -32,6 +47,10 @@ $R
 
 2. In the Recycle Bin, there is a file that contains the original filename, path, file size, and when the file was deleted. What are the first two characters of this filename?
 $I
+
+3. Recover the flag from the Recycle Bin. Enter the name of the recycle bin file that contained the contents of the flag, and the contents of the deleted file.
+Get-Childitem 'C:\$RECYCLE.BIN' -Recurse -Verbose -Force | select FullName
+get-content 'C:\$RECYCLE.BIN\S-1-5-21-2881336348-3190591231-4063445930-1003\$R9R8XUA.txt'
 
 USERASSIST
 
