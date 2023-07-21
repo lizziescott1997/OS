@@ -1,1 +1,68 @@
+artifacts - let you know what was done on system; user activity, anything abnormal
+
+wmic user account where 'sid="<SID>"' get name - get user name associated with SID
+
+            GETTING USER SID
+
+-figure out particular user involved, collect artifacts related to user
+
+get-wmiobject win32_useraccount | select name,sid (PowerShell)
+
+Get-LocalUser | select Name,SID (PowerShell) -SIDs for all users on the system
+
+wmic useraccount get name,sid (CMD.EXE ONLY)
+
+_____________________________________________________________________________
+
+            PREFETCH
+
+created by the windows operating system when an application is run from a specific location for the first time
+see application history for user
+
+gci -Path 'C:\Windows\Prefetch' -ErrorAction Continue | select * | select -first 5
+  -name of executable, timestamp of how many times run, how many times it was run, etc
+
+_________________________________________________________________________________________________
+
+            USERASSIST
+
+registry key tracks the GUI-based programs that were ran by a particular user
+
+View executable Files run(applications):
+Get-ItemProperty 'REGISTRY::HKEY_USERS\*\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\Count'
+
+View shortcut files executed:
+Get-ItemProperty 'REGISTRY::HKEY_USERS\*\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{F4E57C4B-2036-45F0-A9AB-443BCFE33D9F}\Count'
+
+Get-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\Count'
+  with results, go to cyber chef, select rot13
+
+_________________________________________________________________________________________________
+
+      WINDOWS BACKGROUND ACTIVITY MONITOR (BAM)
+
+Windows service that Controls activity of background applications
+see last execution date and time 
+
+get-childitem "C:\$RECYCLE.BIN" -recurse -verbose -force | select FullName - see contents of recycle bin and SIDs associated
+
+Get-Itemproperty 'HKLM:\SYSTEM\CurrentControlSet\Services\bam\UserSettings\*' (Windows 1709 & 1803)
+
+Get-Itemproperty 'HKLM:\SYSTEM\CurrentControlSet\Services\bam\state\UserSettings\*' (Windows 1809 and newer)
+
+
+_________________________________________________________________________________________________________
+
+        RECYCLE BIN
+
+see content of deleted files and original path and name
+$R - content of deleted files
+$I - original path and name
+
+gci 'C:\$RECYCLE.BIN' -Recurse -Verbose -Force | select *
+
+gci 'C:\$RECYCLE.BIN' -Recurse -Force
+
+___________________________________________________________________________________
+
 
