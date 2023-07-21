@@ -1,0 +1,76 @@
+BIOS - first thing that loads, starts everything
+  Master Boot Record MBR- identify operating system
+  .exe
+UEFI - newer version of BIOS
+  .efi
+  -uses GPT not MBR - goes straight to boot manager
+
+NTLDR.exe- older than Windows 7, Boot.ini
+Bootmanager.exe - Windows 7 and newer, BCD
+
+
+WINDOWS PREBOOT AND BOOT PROCESS:
+
+POST ------ BIOS ----- Volume Boot Sector ---- Bootloader(NTLDR.exe Kernel 5)----Boot.ini---->-----NTOSKRNL
+  |                             |
+  |                             |
+  |                             Bootloader (Bootmgr.exe Kernel 6+)---- BCD ---- OS loader (winload.exe/winresume.exe)----NTOSKRNL
+  |
+UEFI-----GUID Partition Table---->----Boot Manager---(Bootmgrfw.efi Kernel 6+)----BCD-----OS Loader(Winloader.efi/WinResume.efi)----NTOSKRNL
+
+**WINDOWS 10 LOGON PROCESS:
+
+System(PID 4)----SMSS.exe----SMSS.exe(session 0)-----CSRSS.exe (Session 0)
+                    |                    |
+                    |                    |  
+                    |                    |
+                SMSS.exe (session 1)    WININIT.exe(Session 0)----SVCHOST.exe(Session 0)
+                |          |                    |
+                |          |                    |
+                |          |                    |  
+WINLOGON.exe(Session 1)  CSRSS.exe(Session 1)   LSSAS.exe(Session 0)
+  |              |
+  |              |
+  |              |
+LOGONUI.exe    USERINIT.exe-----Explorer.exe(Session 1)
+(Session 1)    (Session 1)
+
+
+On Windows System is always PID 4, spawns SMSS.exe which spawns SMSS.exe Session 0(OS) and Session 1(user interaction)
+
+****persistence*****
+Services.exe -easy way for enemy to get in because they restart automatically, restart malware
+
+_____________________________________________________________________________________________________________
+
+                  ENUMERATING SERVICES
+
+get-service
+get-service | where-object($_.status -eq "running")
+format-list for more info
+
+.\sc.exe or .\sc.exe query <service>
+
+reg query HKEY_LCOAL_MACHINE\SYSTEM\CurrentControlSet\Services | findstr <service> - see if there is a registry entry
+reg query HKEY_LCOAL_MACHINE\SYSTEM\CurrentControlSet\Services\<service> - get more details on the entry
+
+.\tasklistexe  /svc
+
+_________________________________________________________________________________________________________-
+
+                BCDEDIT
+
+edit in cmd
+
+display current BCD config, where to load OS from
+.\bcdedit.exe - get help file
+.\bcdedit.exe /export C:\BCD.bk - make backup before editing
+bcdedit.exe /import C:\BCD.bk - reset back to backup
+
+bcdedit /set {bootmgr} description "Windows 7 -Lion Den"  - edit file, change description section
+  -can only use predefined values for the sections w/ {}
+
+bcedit /create {ntldr} /d "Windows" - create entry
+  /d is descrption
+
+bcdedit /deletevalue {current} osdevice - delete entry
