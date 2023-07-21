@@ -1,0 +1,123 @@
+1.
+
+3. What is the full path to folder used when Windows redirects 32 bit applications running on a 64bit system?
+C:\Windows\SysWow64
+
+4.What Windows System Service starts the kernel and user mode subsystems?
+smss.exe
+
+5. What Windows system process:
+
+Runs in session 0
+is responsible for enforcing the security policy on the system
+Performs all logon functions
+Handles password changes
+Creates access tokens
+Writes to the Windows Security Log
+
+lsass.exe
+
+6. Which is spoolsv.exe?
+server mode service
+
+7. Which service type is explorer.exe?
+user mode
+
+8. During a network survey you observed a host running inetinfo.exe service. What type of server might you have found?
+IIS
+
+9. During a reconnaissance mission you enumerated a host running the dns.exe service. Is this a user pc or a server?
+server
+
+10. A host running firefox and office 365 is most likely what type of host? Server or Client
+client
+
+11. How does a User-Mode Service request resources?
+system call
+
+12. Passively copying currently running processes for comparison later is known as?
+baselining
+
+1. What part of the process executes?
+thread
+
+2. Windows has how many process priority levels?
+32
+
+BASICS
+
+1. What Sysinternals tool shows malware persistence locations in tabs within its GUI?
+Autoruns
+
+2. What Sysinternals tool is used to investigate processes?
+Process Explorer
+
+3. What Sysinternals tool can be used to investigate network connection attempts?
+TCPView
+
+4. What Sysinternals tool can view permissions?
+AccessChk
+
+5. What Sysinternals tool allows us to view and modify handles?
+Handle
+
+6. What is the default Windows user directory for files downloaded from the internet?
+Downloads
+
+7. What is the default Windows download directory that everyone has access to? The flag is the absolute path to the directory.
+C:\Users\Public\Downloads
+
+8. What Sysinternals tool shows service load order?
+LoadOrder
+
+9. What is the service name of Windows Defender Firewall?
+mspvcc
+
+10. What SysInternals tool reports .dlls loaded into processes?
+ListDLLs
+
+HIDDEN PROCESSES
+1. There is malware on the system that is named similarly to a legitimate Windows executable. There is a .dll in the folder that the malware runs from. The flag is the name of the .dll.
+AutoRuns
+look at TotallyLegit
+
+2. You notice that there is an annoying pop up happening regularly. Investigate the process causing it. The flag is the name of the executable.
+Process Monitor
+
+3. Determine what is sending out a SYN_SENT message. The flag is the name of the executable.
+TCPView
+
+4. Malware uses names of legit processes to obfuscate itself. Give the flag located in Kerberos’ registry subkey.
+AutoRuns
+look for Kerberos, jump to entry
+
+5. There is malware named TotallyLegit. Find its binary location and there will be a file in that directory. Read the file.
+AutoRuns
+jump to image on TotallyLegit
+
+6. Find the McAfeeFireTray.exe. There is a file in that directory. The flag is inside.
+Process Explorer, right click and go to properties to find path
+
+7. A nonstandard port has been opened by possible malware on the system. Identify the port.
+TCPView
+6666 powershell.exe
+
+8. Determine what mechanism opened the port from hidden_processes_7. The flag is the name of the file.
+searched legit (apparently ListDLLs would be good?)
+
+SITUATIONAL AWARENESS
+
+1. What are the permissions for NT SERVICE\TrustedInstaller on spoolsv.exe? Copy the permissions from your shell.
+.\accesschk.exe -accepteula -c TrustedInstaller
+
+2. What is the PATH listed in the output when we find the handle for spoolsv.exe?
+.\handle.exe -accepteula
+
+3. In what Load Order Group is the Windows Firewall service?
+Load Order
+
+4. What is the first .dll associated with winlogon.exe? Provide the name of the .dll only, not the /absolute/path
+.\Listdlls.exe -accepteula
+
+5. While examining the Windows Defender Firewall, what is the LogAllowedConnections setting set to, for the Public profile?
+Disable (google logallowedconnections)
