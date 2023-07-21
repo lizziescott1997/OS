@@ -1,0 +1,161 @@
+CLIs
+
+1. Which program starts with every CMD and PowerShell instance in Windows 7 and later?
+conhost.exe
+
+2. What Windows 10 feature supports installing Linux subsystem?
+WSL
+
+3. Which Windows feature can be used to interact with any CLI on the Windows system concurrently using multiple tabs?
+Windows Terminal 
+
+4.What was the default shell (command line) of Windows versions Windows 2000 through Windows 8.1?
+Command Prompt
+
+5. What data type do all cmd.exe commands return?
+string
+
+6. What framework is PowerShell built on?
+What framework is PowerShell built on?
+
+7. "What will all of the below give you?
+
+(get-host).version
+
+$host.version
+
+$psversiontable.psversion"
+
+Powershell version
+
+8. After PowerShell Core is installed what CLI command launches it?
+pwsh
+
+9. "After PowerShell Core is installed you can still run the built in version of PowerShell side-by-side. What CLI command will launch the built in version?"
+Powershell.exe
+
+POWERSHELL BASICS
+
+1. What syntax do PowerShell cmdlets follow?
+verb-noun
+
+2. What PS command will list all PowerShell cmdlets?
+What PS command will list all PowerShell cmdlets?
+
+3. What PowerShell command will list all verbs?
+get-verb
+
+4. BASH commands output strings. PowerShell commands output what data type?
+objects
+
+5. All PowerShell objects are comprised of what two things?
+methods and properties
+
+6. What command will list all things that make up a PowerShell object?
+get-member
+
+7. How many properties are available for the get-process cmdlet?  get-process | get-member | where-object {$_.membertype -eq "Property"}
+52
+
+8. How many methods are available for the get-process cmdlet?
+get-process | get-member | where-obect {$_.membertype -eq "Method"}
+
+9. Users' files are stored in their corresponding home directory. What is the literal path to all home directories on a Windows 10 system?
+C:\Users
+
+POWERSHELL ALIASES
+
+1. What PowerShell command will list PowerShell aliases?
+get-alias
+
+2. What PowerShell command lists all of the contents of a directory?
+get-childitem
+
+3. How many aliases does PowerShell have for listing the contents of a directory?  get-alias -definition get-childitem
+3
+
+POWERSHELL HELP
+
+1. What is the basic cmdlet that displays help about Windows Powershell cmdlets and concepts?
+get-help
+
+2. PowerShell "help files" don't show the entire help file with a basic command. What switch option shows the entire help file?
+-full
+
+3. What PowerShell command will update the PowerShell "help files" to the latest version?
+update-help
+
+4. When requesting the help file for the get-process cmdlet, what full command is the 9th example given?
+get-process powershell
+
+5. What PowerShell command will update the PowerShell "help files" to the latest version?
+-online
+
+POWERSHELL INTERACTION
+
+1. What command will start the Chrome browser on your machine?
+start-process chrome.exe
+
+2. What command using a PS Method will stop chrome?
+(get-process chrome*).kill()
+
+3. What PowerShell command (without using a method) will stop the Chrome process?
+stop-process -name chrome
+
+CIM CLASSES
+
+1. PowerShell doesn't have a native cmdlet that will give you processor information (such as get-processor or get-cpu). 
+Knowing this information might be necessary. What command would give you information about the system's processor?
+get-ciminstance -classname win32_processor
+
+2. To complete this challenge, find the description of the Lego Land service.
+get-wmiobject win32_service | select-object name,description
+
+
+POWERSHELL LOGIC
+
+1. What PowerShell command will read a text file?
+get-content
+
+2. What PowerShell command will allow for counting lines in a file, averaging numbers, and summing numbers?
+measure-object
+
+3. In the CTF folder on the CTF User's Desktop, count the number of words in words2.txt.
+get-content words2.txt | measure-object -word
+
+4. Count the number of files in the Videos folder in the CTF user's home directory.
+(get-childitem | measure-object).count
+
+5. Find the only line that makes the two files in the CTF user's Downloads folder different.
+compare-object (get-content old.txt) (get-content new.txt)
+
+6. The password is the 21st line from the top, in ASCII alphabetically-sorted, descending order of the words.txt file.
+get-content words.txt | sort-object -descending | select -index 21
+
+7. Count the number of unique words in words.txt
+get-content words.txt | sort-object | get-unique | measure-object
+
+9. Count the number of folders in the Music folder in the CTF user’s profile.
+(get-childitem -directory | measure-object).count
+
+REGEX
+
+1. What PowerShell command searches for text patterns in a string?
+select-string
+
+2. Count the number of times, case-insensitive, gaab is listed in words.txt
+$FileContent = Get-Content "words.txt"
+$Matches = Select-String -InputObject $FileContent -Pattern "gaab" -AllMatches
+$Matches.Matches.Count
+
+3. Count the number of words, case-insensitive, with either a or z in a word, in the words.txt file
+select-string -path words.txt -pattern '[AaZz]' | measure-object
+
+4. Count the number of lines that az appears in the words.txt file 
+select-string -path words.txt -pattern 'az' | measure-object
+
+5. Count the number of words in words.txt that meet the following criteria:
+    a appears at least twice consecutively
+    and is followed immediately by any of the letters a through g
+
+select-string -path words.txt -pattern '[Aa]{2}[a-g]' | measure-object
