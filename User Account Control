@@ -1,0 +1,43 @@
+limits the privileges of user run applications, even when run as Administrator, to prevent the modification of system files, resources, or settings
+  -run at appropriate permissions
+
+Registry key: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+
+Color Coded Consent Prompts:
+  Red - Application or publisher blocked by group policy
+  Blue & gold - Administrative application
+  Blue - Trusted and Authenticode signed application
+  Yellow - Unsigned or signed but not trusted application
+
+Execution Levels:
+  -tell what permissions file/programmer has
+  -some can auto elevate
+  
+  asInvoker - Application will run w/ same permissions as the process that started it; application can be elevated to higher permission level by selecting Run as Administrator.
+  
+  requireAdministrator - Application will run with administrator permissions; user who starts the application must be a member of Administrators group. 
+    If the opening process is not running with administrative permissions, the system will prompt for credentials.
+
+`highestAvailable - Application will run with the highest permission level that it can. 
+  If the user who starts the application is a member of the Administrators group, this option is the same as requireAdministrator. 
+  If the highest available permission level is higher than the level of the opening process, the system will prompt for credentials.
+
+net use * http://live.sysinternals.com
+z:
+dir - see sysinteral tools
+
+net use * http://live.sysinternals.com
+new-psdrive -name "sysint" -psprovider filesystem -root "\\live.sysinternals.com\Tools"
+
+**Download SysInternalsSuite**
+$wc =new-object System.Net.WebClient
+$wc.DownloadFile("https://download.sysinternals.com/files/SysinternalsSuite.zip","$pwd\sysinternalssuite.zip")
+expand-archive Sysinternalssuite.zip
+cd .\SysInternalsSuite
+  
+run stuff w/in directory 
+  .\strings.exe C:\Windows\System32\*.exe -accepteula | select-string -simplematch "autoelevate"
+    -look in system32 for any .exe, look for anything w/ autoelevate
+
+.\sigcheck.exe -m CX"\Windows\System32\slui.exe -accepteula | select-string -simplematch "level" - see execution level
+.\sigcheck.exe -m CX"\Windows\System32\slui.exe - see all the info on sigcheck in manifest file
