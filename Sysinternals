@@ -1,0 +1,103 @@
+**Download SysInternalsSuite**
+$wc =new-object System.Net.WebClient
+$wc.DownloadFile("https://download.sysinternals.com/files/SysinternalsSuite.zip","$pwd\sysinternalssuite.zip")
+expand-archive Sysinternalssuite.zip
+cd .\SysInternalsSuite
+  
+run stuff w/in directory 
+  .\strings.exe C:\Windows\System32\*.exe -accepteula | select-string -simplematch "autoelevate"
+    -look in system32 for any .exe, look for anything w/ autoelevate
+
+.\sigcheck.exe -m CX"\Windows\System32\slui.exe -accepteula | select-string -simplematch "level" - see execution level
+.\sigcheck.exe -m CX"\Windows\System32\slui.exe - see all the info on sigcheck in manifest file
+
+PROCMON
+
+-gui app to monitor boot process of Windows OS
+
+AUTORUNS
+
+hows applications automatically started on during system boot or login as well as the Registry and file system locations for auto-start configurations. 
+  Examples: AppInit, Winlogon, Scheduled Tasks, Services, Logon, etc.
+
+Pink - Means no publisher information was found or the digital signature doesn’t exist or match.
+Green - Used when comparing previous set of Autorun data to indicate an item wasn’t there last time.
+Yellow - The startup entry is there, but the file or job it points to doesn’t exist anymore.
+
+PROCEXP / PROCESS EXPLORER
+
+-GUI real time tree view of processes
+-hit space to pause/unpause process
+
+kill, restart, or suspend processes
+
+Green - New Objects - Briefly flashes "Green" before changing into one of the 9 other colors.
+Red - Deleted Objects - Dead.
+Lavender - Own Processes - Processes owned by the current logged in user.
+Salmon - Services
+Gray - Suspended Processes
+Purple - Packed Images -Processes might contain compressed code hidden inside them. Malware uses it because it obfuscates the contents of the file.
+Cyan - Immersive Process - Windows Store App related, Uses Windows 8+ new APIs
+
+TCPVIEW
+
+-GUI version of a netstat command
+-either manually refresh or set to auto update
+
+
+PSEXEC
+
+-run from command line
+-useful on remote systems
+
+-s - run as system
+
+.\PSExec.exe -i -s  C:\Windows\regedit.exe
+.\PSExec -s \\file-server cmd.exe - remoting, opens new cmd prompt inside same shell, able to use normally
+
+PSLOGGEDON
+
+-command line
+-list of users logged onto system
+.\PsLoggedon.exe -accepteula
+
+get info for multiple systems:
+  Write-Output File-Server > "$env:HOMEPATH\Desktop\ServerList.txt"
+  Write-Output Domain-Controll >> "$env:HOMEPATH\Desktop\ServerList.txt"
+  Write-Output $env:Computername >> "$env:HOMEPATH\Desktop\ServerList.txt"
+  Foreach ($system in (gc "$env:HOMEPATH\Desktop\ServerList.txt") ) {.\PsLoggedon.exe \\$system -nobanner}
+
+LOGONSESSIONS
+
+-who logged in, what time, type of login
+.\logonsessions.exe  -p -accepteula
+
+PSLIST
+
+-see process on local machine
+
+.\pslist.exe -s 100 -r 10 -accepteula -run for 100 seconds and refresh every 10
+
+PSINFO
+
+-analyze system info
+
+.\PSInfo.exe -accepteula
+
+run on mulitple systems:
+  Write-Output File-Server > "$env:HOMEPATH\Desktop\ServerList.txt"
+  Write-Output Domain-Controll >> "$env:HOMEPATH\Desktop\ServerList.txt"
+  Write-Output $env:Computername >> "$env:HOMEPATH\Desktop\ServerList.txt"
+  Foreach ($system in (gc "$env:HOMEPATH\Desktop\ServerList.txt") ) {.\Psinfo.exe -hs -nobanner \\$system | out-file $env:homepath\Desktop\psinfo.txt -append}
+
+STRINGS
+
+-view hidden info in files
+
+.\strings.exe C:\Users\andy.dwyer\desktop\serverlist.txt
+
+HANDLE
+
+-analyze windows handles process
+
+.\handle.exe -p <PS PID> -accepteula
