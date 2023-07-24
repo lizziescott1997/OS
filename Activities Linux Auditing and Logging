@@ -14,6 +14,9 @@ xpath -q -e 'nmaprun/host/address/@addr' output.xml | md5sum
 4.Select all of the IP addresses and ports using a single XPATH Union Statement
 xpath -q -e '/nmaprun/host/address/@addr | /nmaprun/host/ports/port/@portid' output.xml | md5sum
 
+5. Select every IP address with open (in use) ports using XPATH queries and XPATH axes.
+xpath -q -e '//state[@state="open"]/../@portid | //state[@state="open"]/../../../address/@addr' output.xml | md5sum
+
 STANDARDS
 
 1. What RFC is Syslog?
