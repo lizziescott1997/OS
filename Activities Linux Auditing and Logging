@@ -1,1 +1,43 @@
+XML
+
+1. Identify the XML element name in the output below
+<scaninfo type="syn" protocol="tcp" numservices="200" services="1-200"/>
+<scaninfo/>
+
+2. Identify one of the XML attributes in the output below
+<scaninfo type="syn" protocol="tcp" numservices="200" services="1-200"/>
+protocol="tcp"
+
+3. Parse all of the IP addresses from the file using XPATH queries
+xpath -q -e 'nmaprun/host/address/@addr' output.xml | md5sum
+
+4.Select all of the IP addresses and ports using a single XPATH Union Statement
+xpath -q -e '/nmaprun/host/address/@addr | /nmaprun/host/ports/port/@portid' output.xml | md5sum
+
+STANDARDS
+
+1. What RFC is Syslog?
+5424
+
+2. What is the numerical code assigned to the facility dealing with authorization?
+4
+
+3. How many severity codes are defined in the standard that defines syslog?
+8
+
+4. What severity is assigned to system instability messages?
+0
+
+JSON
+
+1. Use jq to pretty print the JSON file conn.log.
+jq . conn.log | md5sum
+
+2. This file is a conn.log made in Zeek (Bro) with data about TCP/IP connections.
+Use jq to locate and count the unique originating endpoint IP addresses in the file. Enter the number of unique originating IP addresses as the flag.
+cat conn.log | jq '.["id.orig_h"]' | sort -u | wc -l
+
+3. Use jq to locate and count connections where the destination IP sent more than 40 bytes to the source IP.
+cat conn.log | jq 'select(.resp_bytes > 40)' | sort -n | uniq -c
+
 
