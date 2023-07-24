@@ -119,5 +119,15 @@ ausearch - query audit logs, show authentication logs
 
 ausearch -k file_watch | aureport -f -i | tail -n30 - pipe to aureport for formatting
 
+__________________________________________________________________________________________________________
+
+LOG FORMATS
+
+syslog - ASCII, space separated, each entry as single line, lacks serialization
+
+XML - parse w /xpath
+	xpath -q -e '//element/@attribute' file.xml
+
+
 
 
