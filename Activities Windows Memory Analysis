@@ -1,0 +1,39 @@
+PLUGIN
+
+1. What Volatility plugin will dump a process to an executable file sample?
+procdump
+
+2. What Volatility plugin will extract command history by scanning for _COMMAND_HISTORY?
+cmdscan
+
+3. What Volatility plugin will show driver objects?
+driverscan
+
+BASICS
+
+1. What switch/argument will list all plugins for Volatility?
+-h
+
+2. What command do you run to find which memory profile to use with a memory image?
+imageinfo
+
+3. What is the 12th plugin listed in the Volatility help menu?
+.\volatility_2.6_win64_standalone.exe -h
+
+4. What profile do you use in conjunction with this memory image?
+.\volatility_2.6_win64_standalone.exe -f ".\0zapftis.vmem" imageinfo
+
+MALWARE
+
+1. What command did the attacker type to check the status of the malware?
+.\volatility_2.6_win64_standalone.exe -f ".\0zapftis.vmem" --profile=WinXPSP2x86 cmdscan
+
+2. What are the last 7 digits of the memory offset for the driver used by the malware?
+.\volatility_2.6_win64_standalone.exe -f ".\0zapftis.vmem" --profile=WinXPSP2x86 driverscan
+
+3. The process running under PID 544 seems malicious. What is the md5hash of the executable?
+.\volatility_2.6_win64_standalone.exe -f ".\0zapftis.vmem" --profile=WinXPSP2x86 procdump -p 544 -D .
+get-filehash -algorithm MD5 .\executable.544.exe
+
+4. What remote IP and port did the system connect to?
+.\volatility_2.6_win64_standalone.exe -f ".\0zapftis.vmem" --profile=WinXPSP2x86 connscan
