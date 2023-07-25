@@ -24,6 +24,10 @@ BAM
 What version of Windows 10 is workstation2 running? The answer is the 4 digit Windows 10 release (version) number.
 (get-itemproperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").releaseid
 
+2. Enter the full path of the program that was run on this computer from an abnormal location.
+wmic useraccount  get caption,sid | more
+Get-Itemproperty 'HKLM:\SYSTEM\CurrentControlSet\Services\bam\UserSettings\S-1-5-21-2881336348-3190591231-4063445930-1003'
+
 LAST ACCESS
 
 1. Figure out the last access time of the hosts file.
@@ -70,4 +74,7 @@ system
 
 3. When reading logs, you may notice ... at the end of the line where the message is truncated. What format-table switch/argument will display the entire output?
 -wrap
+
+4. Check event logs for a flag string.
+get-eventlog -logname system -message *flag* | ft -wrap
 
