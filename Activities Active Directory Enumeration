@@ -1,0 +1,50 @@
+BASICS
+
+1. 
+
+2. What PowerShell command will list all users and their default properties?
+Get-ADUser -Filter 'Name -like "*"'
+
+3. How many users are members of the Domain Admins group?
+(get-adgroupmember -identity 'Domain Admins').name
+
+4. How many total users are members of the Domain Admins group?
+same as 3 but go through each subgroup
+
+5. What PowerShell command will allow you to search Active Directory accounts for expired accounts without having to create a filter?
+search-adaccount
+
+6. Find the short name of the domain in which this server is a part of.
+geet-addomain
+
+8. What is the domain portion of the following SID:
+S-1-5-21-1004336348-1177238915-682003330-1000
+21-1004336348-1177238915-682003330
+
+SEARCH ACCOUNTS
+
+Find the expired accounts that aren't disabled. List the last names in Alphabetical Order, separated with a comma, and no space between.
+search-adaccount -accountexpired
+
+SEARCH EMAILS
+Find the unprofessional email addresses. List the email's domain.
+get-aduser -filter * -properties emailaddress,displayname
+
+SEARCH FILES
+
+The flag is the unprofessionally-named file located somewhere on the Warrior Share.
+net use * "\\file-server\warrior share"
+cd and dir through file system
+
+SEARCH INSIDER
+
+2. The flag is the name of the user who is requesting modified access rights.
+get-aduser -filter * -properties name,telephonenumber| select name,telephonenumber
+
+SEARCH PASSWORD
+
+Find the following three accounts:
+    two accounts with passwords that never expire
+    one account that has its password stored using reversible encryption
+get-aduser -filter * -properties name,passwordneverexpires
+allowreversible password encryption
