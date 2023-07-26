@@ -1,0 +1,35 @@
+group nesting - put one group inside another, inherits the permissions of the outer group
+
+Group Policy Object queries:
+  gpresult
+  Get-GPResultantSetOfPolicy
+
+DSTOOLS:
+    DSADD
+    DSGET
+    DSMOD
+    DSMOVE
+    DSQUERY
+
+PowerShell AD Commands:
+    (VERB)-AD(NOUN)
+        Ex:
+            Get-ADUser
+            New-ADUser -Name "Bad Guy" -PasswordNotRequired 1 -Path "OU=3RD LPT,OU=CCO,OU=3RDBN,OU=WARRIORS,DC=ARMY,DC=WARRIORS"
+
+get-command -module activedirectory - get all AD commands
+get-adddefaultdomaninpasswordpolicy - password policy for domain
+get-adfprest - get name,root domain
+get-adddomain - domain info
+get-adgroup * - list of all the groups
+get-adgroup <group name> -info on specific group
+get-adgroupmember -identity <group name> - get members of a group
+  -recursive for more info
+get-aduser * - get all the AD users
+
+gpresult.exe /user <username> /v - see group policy info for a user
+
+(get-adgroupmember -identity <group name>).name - get names of all users in group
+
+get-adgbroupmember- identity < group name> -recursive |%{get-aduser -identitu $_.<group name> | select name,enabled - all members of group and their account status
+
