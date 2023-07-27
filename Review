@@ -1,0 +1,49 @@
+3 attempts per question, 10 questions, 4 hrs, need a 70, DO QUESTIONS IN ORDER
+to use sysinternals make sure to download w/ net use
+
+LINUX
+
+identify open ports:
+netstat -ano
+suspcious ports: patterns, 4444, 6666
+see what port opened by what process: ps -elf
+
+suspcious process:
+abnormally high PID
+slight mispellings
+run from strange locations
+
+forms of persistence:
+crontab
+run levels
+profiles - /etc/profile (look in Linux Boot Process FG)
+
+command not working - try running w/ sudo
+
+WINDOWS
+
+run everything as administrator
+
+identify open ports:
+netstat 
+w/ sysinternals: autoruns,tcpview
+
+view processes:
+tasklist, get-process
+sysinternals tools
+suspcious process: mispellings, known windows system file running from user directory
+
+persistence:
+powershell profiles - $profile.<>user<>host
+  -order of precidence
+registry (Windows Registry FG 5.4)
+services
+Procexp,proxmon,autoruns
+
+reg query - look at registry keys
+gci | get-item(property)
+
+Artifacts:
+Auditing and Logging FG
+***tie to a sid***
+get-localuser | select name,SID
