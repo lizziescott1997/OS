@@ -1,37 +1,3 @@
-HEX
-
-1. What are the maximum and minimum value a single Hexadecimal digit can contain?
-0x0 - 0xF
-
-2. What are the maximum and minimum values, in decimal notation, that a single Hexadecimal digit can represent?
-0-15
-
-3. Solve the following equation:
-
-0x31A + 0x43
-
-0x35D
-
-4. Solve the following equation:
-
-0x31A - 0x21B
-
-used calculator - 0xFF
-
-BITS AND BYTES
-
-1. How many bits are in a nibble, and a byte?
-4, 8
-
-2. How many bits does a single Hexadecimal character represent?
-4
-
-3. How many bytes could the range 0x00000000 - 0x00000010 contain?
-17
-
-4. What are the values contained in hex positions 0x00000001 through 0x00000008?
-look at hex dump and starting at 2nd value for 1st position
-
 MBR
 
 1. How large is the Master Boot Record and what directory is it located in?
