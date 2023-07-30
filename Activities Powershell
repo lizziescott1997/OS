@@ -1,60 +1,6 @@
-CLIs
 
-1. Which program starts with every CMD and PowerShell instance in Windows 7 and later?
-conhost.exe
-
-2. What Windows 10 feature supports installing Linux subsystem?
-WSL
-
-3. Which Windows feature can be used to interact with any CLI on the Windows system concurrently using multiple tabs?
-Windows Terminal 
-
-4.What was the default shell (command line) of Windows versions Windows 2000 through Windows 8.1?
-Command Prompt
-
-5. What data type do all cmd.exe commands return?
-string
-
-6. What framework is PowerShell built on?
-What framework is PowerShell built on?
-
-7. "What will all of the below give you?
-
-(get-host).version
-
-$host.version
-
-$psversiontable.psversion"
-
-Powershell version
-
-8. After PowerShell Core is installed what CLI command launches it?
-pwsh
-
-9. "After PowerShell Core is installed you can still run the built in version of PowerShell side-by-side. What CLI command will launch the built in version?"
-Powershell.exe
-
-POWERSHELL BASICS
-
-1. What syntax do PowerShell cmdlets follow?
-verb-noun
-
-2. What PS command will list all PowerShell cmdlets?
-What PS command will list all PowerShell cmdlets?
-
-3. What PowerShell command will list all verbs?
-get-verb
-
-4. BASH commands output strings. PowerShell commands output what data type?
-objects
-
-5. All PowerShell objects are comprised of what two things?
-methods and properties
-
-6. What command will list all things that make up a PowerShell object?
-get-member
-
-7. How many properties are available for the get-process cmdlet?  get-process | get-member | where-object {$_.membertype -eq "Property"}
+7. How many properties are available for the get-process cmdlet?  
+get-process | get-member | where-object {$_.membertype -eq "Property"}
 52
 
 8. How many methods are available for the get-process cmdlet?
@@ -62,17 +8,6 @@ get-process | get-member | where-obect {$_.membertype -eq "Method"}
 
 9. Users' files are stored in their corresponding home directory. What is the literal path to all home directories on a Windows 10 system?
 C:\Users
-
-POWERSHELL ALIASES
-
-1. What PowerShell command will list PowerShell aliases?
-get-alias
-
-2. What PowerShell command lists all of the contents of a directory?
-get-childitem
-
-3. How many aliases does PowerShell have for listing the contents of a directory?  get-alias -definition get-childitem
-3
 
 POWERSHELL HELP
 
