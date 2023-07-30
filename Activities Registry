@@ -1,35 +1,3 @@
-PRIMER REGISTRY
-
-1. What Windows registry path is the Volatile Hive?
-HKLM\Hardware
-
-2. What registry key creates the Wow6432Node to represent 32-bit applications that run on a 64-bit version of Windows?
-HKLM\Software
-
-3. In what registry path are the BOOT_START drivers located?
-HKLM\SYSTEM\CurrentControlSet\Services
-
-4. What start value do BOOT_START drivers have in the registry?
-0x0
-
-5. During kernel initialization, what registry location is read containing all SYSTEM_START drivers and services with a start value of 0x1?
-HKLM\SYSTEM\CurrentControlSet\Services 
-
-6. Auto_START drivers and services are loaded after kernel initialization. What start value do they have in the registry?
-0x2
-
-7. What start value do DEMAND_START drivers and services have in the registry?
-0x3
-
-8. When accessing a remote registry which are the only 2 accessible HKEYs?
-HKLM, HKU
-
-9. What PowerShell cmdlet will list currently mapped drives?
-get-psdrive
-
-10. What is the native Windows GUI tool for managing the registry?
-regedit
-
 BASICS
 
 1. What registry hive contains all machine settings?
