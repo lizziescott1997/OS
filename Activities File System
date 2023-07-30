@@ -16,8 +16,6 @@ Get-Acl -Path hosts).Access
 8. Find the last five characters of the MD5 hash of the hosts file.
 get-filehash hosts -algorithm md5
 
-9.
-
 10. There is a hidden directory in the CTF user's home directory. The directory contains a file. Read the file.
 dir /a:h
 
