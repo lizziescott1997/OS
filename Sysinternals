@@ -1,9 +1,3 @@
-**Download SysInternalsSuite**
-$wc =new-object System.Net.WebClient
-$wc.DownloadFile("https://download.sysinternals.com/files/SysinternalsSuite.zip","$pwd\sysinternalssuite.zip")
-expand-archive Sysinternalssuite.zip
-cd .\SysInternalsSuite
-  
 run stuff w/in directory 
   .\strings.exe C:\Windows\System32\*.exe -accepteula | select-string -simplematch "autoelevate"
     -look in system32 for any .exe, look for anything w/ autoelevate
